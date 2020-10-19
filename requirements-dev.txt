@@ -1,3 +1,5 @@
 pre-commit
 pytest
 requests
+rst
+sphinx
