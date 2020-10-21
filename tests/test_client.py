@@ -1,4 +1,3 @@
-from requests.api import head
 from dbks.client import Client
 from unittest.mock import patch
 
