@@ -1,4 +1,5 @@
 from dbks.response_handler import ResponseHandler
+from dbks.util import same_as_target
 
 
 class ClusterController:
@@ -46,13 +47,20 @@ class ClusterController:
         return cluster_ids
 
     def create_or_edit_cluster(self, cluster_def):
-        cluster_ids = self.get_id_by_name(cluster_def["cluster_name"])
+        cluster_name = cluster_def["cluster_name"]
+        cluster_ids = self.get_id_by_name(cluster_name)
         if not cluster_ids:
-            self.create(cluster_def)
+            print(f'cluster "{cluster_name}" does not exist, creating...')
+            return self.create(cluster_def)
         elif len(cluster_ids) == 1:
-            pass
-            # compare
-            # self.edit(cluster_ids[0], cluster_def)
+            cluster_id = cluster_ids[0]
+            (f'cluster "{cluster_name}" already exists, compare spec...')
+            current_def = self.get(cluster_id).json()
+            if not same_as_target(cluster_def, current_def):
+                (f'cluster "{cluster_name}" spec changed, editing...')
+                return self.edit(cluster_id, cluster_def)
+            else:
+                print("specs are the same, skipping ...")
         else:
             raise Exception(
                 f'Found multiple clusters {cluster_ids} with name [{cluster_def["cluster_name"]}]!'
