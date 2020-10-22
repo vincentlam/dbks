@@ -15,7 +15,7 @@ class Client:
     def url(self):
         return f"https://{self.host}/api/{self.version}"
 
-    def call(self, method, endpoint, params={}, json={}, headers=None):
+    def call(self, method, endpoint, params=None, json=None, headers=None, **kwargs):
         if headers is None:
             headers = self.headers
         else:
@@ -23,5 +23,10 @@ class Client:
             tmp_headers.update(headers)
             headers = tmp_headers
         return self.session.request(
-            method, self.url + endpoint, params=params, json=json, headers=headers
+            method,
+            self.url + endpoint,
+            params=params,
+            json=json,
+            headers=headers,
+            **kwargs,
         )

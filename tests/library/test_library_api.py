@@ -5,32 +5,42 @@ from unittest.mock import patch
 
 
 @pytest.mark.parametrize(
-    "inputs, expect, result",
+    "inputs, expect",
     [
         (
-            ["all_cluster_statuses", None, None],
-            ["GET", "all-cluster-statuses", {}, {}],
-            True,
+            {"func": "all_cluster_statuses"},
+            {"method": "GET", "endpoint": "all-cluster-statuses"},
         ),
         (
-            ["cluster_status", {"cluster_id": "1"}, None],
-            ["GET", "cluster-status", {"cluster_id": "1"}, {}],
-            True,
+            {"func": "cluster_status", "params": {"cluster_id": "1"}},
+            {
+                "method": "GET",
+                "endpoint": "cluster-status",
+                "params": {"cluster_id": "1"},
+            },
         ),
-        (["install", None, {"a": "1"}], ["POST", "install", {}, {"a": "1"}], True),
-        (["uninstall", None, {"a": "1"}], ["POST", "uninstall", {}, {"a": "1"}], True),
+        (
+            {"func": "install", "json": {"a": "1"}},
+            {"method": "POST", "endpoint": "install", "json": {"a": "1"}},
+        ),
+        (
+            {"func": "uninstall", "json": {"a": "1"}},
+            {"method": "POST", "endpoint": "uninstall", "json": {"a": "1"}},
+        ),
     ],
 )
-def test_library_api(monkeypatch, inputs, expect, result):
+def test_library_api(monkeypatch, inputs, expect):
     monkeypatch.setenv("DBC_TOKEN", "fake_token")
     with patch("dbks.client.Session.request") as mock:
         client = Client("databricks.com")
         api = LibraryAPI(client)
-        getattr(api, inputs[0])(params=inputs[1], json=inputs[2])
+        getattr(api, inputs["func"])(
+            params=inputs.get("params", None), json=inputs.get("json", None)
+        )
         mock.assert_called_once_with(
-            expect[0],
-            f"https://databricks.com/api/2.0/libraries/{expect[1]}",
-            params=expect[2],
-            json=expect[3],
+            expect["method"],
+            f"https://databricks.com/api/2.0/libraries/{expect['endpoint']}",
+            params=expect.get("params", None),
+            json=expect.get("json", None),
             headers={"Authorization": "Bearer fake_token"},
         )

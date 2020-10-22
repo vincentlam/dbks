@@ -2,8 +2,8 @@ class ClusterAPI:
     def __init__(self, client):
         self.client = client
 
-    def create(self, params=None, json=None):
-        return self.client.call("POST", "/clusters/create", json=json)
+    def create(self, **kwargs):
+        return self.client.call("POST", "/clusters/create", **kwargs)
 
     def edit(self, params=None, json=None):
         return self.client.call("POST", "/clusters/edit", json=json)

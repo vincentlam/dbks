@@ -5,60 +5,73 @@ from unittest.mock import patch
 
 
 @pytest.mark.parametrize(
-    "inputs, expect, result",
+    "inputs, expect",
     [
         (
-            ["get_cluster_permission_levels", {"cluster_id": "1"}, None],
-            ["GET", "clusters/1/permissionLevels", {}, {}],
-            True,
+            {"func": "get_cluster_permission_levels", "params": {"cluster_id": "1"}},
+            {"method": "GET", "endpoint": "clusters/1/permissionLevels"},
         ),
         (
-            ["get_cluster_permissions", {"cluster_id": "1"}, None],
-            ["GET", "clusters/1", {}, {}],
-            True,
+            {"func": "get_cluster_permissions", "params": {"cluster_id": "1"}},
+            {"method": "GET", "endpoint": "clusters/1"},
         ),
         (
-            ["update_cluster_permissions", {"cluster_id": "1"}, {"a": "1"}],
-            ["PATCH", "clusters/1", {}, {"a": "1"}],
-            True,
+            {
+                "func": "update_cluster_permissions",
+                "params": {"cluster_id": "1"},
+                "json": {"a": "1"},
+            },
+            {"method": "PATCH", "endpoint": "clusters/1", "json": {"a": "1"}},
         ),
         (
-            ["replace_cluster_permissions", {"cluster_id": "1"}, {"a": "1"}],
-            ["PUT", "clusters/1", {}, {"a": "1"}],
-            True,
+            {
+                "func": "replace_cluster_permissions",
+                "params": {"cluster_id": "1"},
+                "json": {"a": "1"},
+            },
+            {"method": "PUT", "endpoint": "clusters/1", "json": {"a": "1"}},
         ),
         (
-            ["get_directory_permission_levels", {"directory_id": "1"}, None],
-            ["GET", "directories/1/permissionLevels", {}, {}],
-            True,
+            {
+                "func": "get_directory_permission_levels",
+                "params": {"directory_id": "1"},
+            },
+            {"method": "GET", "endpoint": "directories/1/permissionLevels"},
         ),
         (
-            ["get_directory_permissions", {"directory_id": "1"}, None],
-            ["GET", "directories/1", {}, {}],
-            True,
+            {"func": "get_directory_permissions", "params": {"directory_id": "1"}},
+            {"method": "GET", "endpoint": "directories/1"},
         ),
         (
-            ["update_directory_permissions", {"directory_id": "1"}, {"a": "1"}],
-            ["PATCH", "directories/1", {}, {"a": "1"}],
-            True,
+            {
+                "func": "update_directory_permissions",
+                "params": {"directory_id": "1"},
+                "json": {"a": "1"},
+            },
+            {"method": "PATCH", "endpoint": "directories/1", "json": {"a": "1"}},
         ),
         (
-            ["replace_directory_permissions", {"directory_id": "1"}, {"a": "1"}],
-            ["PUT", "directories/1", {}, {"a": "1"}],
-            True,
+            {
+                "func": "replace_directory_permissions",
+                "params": {"directory_id": "1"},
+                "json": {"a": "1"},
+            },
+            {"method": "PUT", "endpoint": "directories/1", "json": {"a": "1"}},
         ),
     ],
 )
-def test_permission_api(monkeypatch, inputs, expect, result):
+def test_permission_api(monkeypatch, inputs, expect):
     monkeypatch.setenv("DBC_TOKEN", "fake_token")
     with patch("dbks.client.Session.request") as mock:
         client = Client("databricks.com")
         api = PermissionAPI(client)
-        getattr(api, inputs[0])(params=inputs[1], json=inputs[2])
+        getattr(api, inputs["func"])(
+            params=inputs.get("params", None), json=inputs.get("json", None)
+        )
         mock.assert_called_once_with(
-            expect[0],
-            f"https://databricks.com/api/2.0/permissions/{expect[1]}",
-            params=expect[2],
-            json=expect[3],
+            expect["method"],
+            f"https://databricks.com/api/2.0/permissions/{expect['endpoint']}",
+            params=expect.get("params", None),
+            json=expect.get("json", None),
             headers={"Authorization": "Bearer fake_token"},
         )

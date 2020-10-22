@@ -11,6 +11,6 @@ def test_client_call(monkeypatch):
             "GET",
             "https://databricks.com/api/2.0/fake",
             params={"a": "1"},
-            json={},
+            json=None,
             headers={"Authorization": "Bearer fake_token"},
         )
