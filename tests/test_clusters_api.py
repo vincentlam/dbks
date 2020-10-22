@@ -1,4 +1,3 @@
-from _pytest.mark import param
 import pytest
 from dbks.client import Client
 from dbks.clusters.api import ClusterAPI
@@ -33,12 +32,12 @@ def test_clusters_api(monkeypatch, inputs, expect, result):
     monkeypatch.setenv("DBC_TOKEN", "fake_token")
     with patch("dbks.client.Session.request") as mock:
         client = Client("databricks.com")
-        clusters_api = ClusterAPI(client)
-        getattr(clusters_api, inputs[0])(params=inputs[1], data=inputs[2])
+        api = ClusterAPI(client)
+        getattr(api, inputs[0])(params=inputs[1], json=inputs[2])
         mock.assert_called_once_with(
             expect[0],
             f"https://databricks.com/api/2.0/clusters/{expect[1]}",
             params=expect[2],
-            data=expect[3],
+            json=expect[3],
             headers={"Authorization": "Bearer fake_token"},
         )
