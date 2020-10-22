@@ -1,6 +1,6 @@
 import pytest
 from dbks.client import Client
-from dbks.clusters.api import ClusterAPI
+from dbks.cluster.api import ClusterAPI
 from unittest.mock import patch
 
 
@@ -28,7 +28,7 @@ from unittest.mock import patch
         (["events", None, {"a": "1"}], ["POST", "events", {}, {"a": "1"}], True),
     ],
 )
-def test_clusters_api(monkeypatch, inputs, expect, result):
+def test_cluster_api(monkeypatch, inputs, expect, result):
     monkeypatch.setenv("DBC_TOKEN", "fake_token")
     with patch("dbks.client.Session.request") as mock:
         client = Client("databricks.com")
