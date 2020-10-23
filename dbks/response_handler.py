@@ -12,8 +12,10 @@ class ResponseHandler(object):
             print("args:", args)
         if kwargs:
             print("kwargs:", kwargs)
+        if not args and not kwargs:
+            print("no args or kwargs")
         res = self.func(instance, *args, **kwargs)
-        if type(res) == Response:
+        if isinstance(res, Response):
             print("Response:")
             print("status_code:", str(res.status_code))
             # print('text:', res.text)
