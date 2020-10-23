@@ -46,22 +46,32 @@ class ClusterController:
                 cluster_ids.append(cluster["cluster_id"])
         return cluster_ids
 
-    def create_or_edit_cluster(self, cluster_def):
+    def create_or_edit_cluster(self, cluster_def, pin=True):
         cluster_name = cluster_def["cluster_name"]
+        cluster_id = None
         cluster_ids = self.get_id_by_name(cluster_name)
+        resp = None
         if not cluster_ids:
             print(f'cluster "{cluster_name}" does not exist, creating...')
-            return self.create(cluster_def)
+            resp = self.create(cluster_def)
+            cluster_id = resp.json()["cluster_id"]
+            if pin:
+                self.pin(cluster_id)
         elif len(cluster_ids) == 1:
             cluster_id = cluster_ids[0]
             (f'cluster "{cluster_name}" already exists, compare spec...')
             current_def = self.get(cluster_id).json()
             if not same_as_target(cluster_def, current_def):
                 (f'cluster "{cluster_name}" spec changed, editing...')
-                return self.edit(cluster_id, cluster_def)
+                resp = self.edit(cluster_id, cluster_def)
             else:
                 print("specs are the same, skipping ...")
+            if pin:
+                self.pin(cluster_id)
+            else:
+                self.unpin(cluster_id)
         else:
             raise Exception(
                 f'Found multiple clusters {cluster_ids} with name [{cluster_def["cluster_name"]}]!'
             )
+        return resp
