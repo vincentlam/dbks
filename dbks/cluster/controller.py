@@ -1,9 +1,12 @@
+from dbks.cluster.api import ClusterAPI
 from dbks.response_handler import ResponseHandler
 from dbks.util import same_as_target
 
 
 class ClusterController:
     def __init__(self, api):
+        if not isinstance(api, ClusterAPI):
+            raise ValueError("Parameter must be an instance of ClusterAPI!")
         self.api = api
 
     @ResponseHandler
