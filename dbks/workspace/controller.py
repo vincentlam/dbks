@@ -1,3 +1,4 @@
+import base64
 from dbks.workspace.api import WorkspaceAPI
 from dbks.response_handler import ResponseHandler
 
@@ -23,10 +24,12 @@ class WorkspaceController:
     @ResponseHandler
     def _import(self, local_path, path, language, overwrite=False, format="SOURCE"):
         # This has a limit of 10 MB
-        file = open(local_path, "rb")
+        content = ""
+        with open(local_path, "r") as file:
+            content = file.read()
         return self.api._import(
             json={
-                "content": file,
+                "content": base64.b64encode(bytes(content, "utf-8")).decode(),
                 "path": path,
                 "language": language.upper(),
                 "overwrite": overwrite,
