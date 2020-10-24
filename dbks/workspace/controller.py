@@ -10,8 +10,34 @@ class WorkspaceController:
 
     @ResponseHandler
     def delete(self, path, recursive=True):
-        self.api.delete(json={"path": path, "recursive": recursive})
+        return self.api.delete(json={"path": path, "recursive": recursive})
 
     @ResponseHandler
     def export(self, path, format="SOURCE"):
-        self.api.export(json={"path": path, "format": format})
+        return self.api.export(json={"path": path, "format": format})
+
+    @ResponseHandler
+    def get_status(self, path):
+        return self.api.get_status(json={"path": path})
+
+    @ResponseHandler
+    def _import(self, local_path, path, language, overwrite=False, format="SOURCE"):
+        # This has a limit of 10 MB
+        file = open(local_path, "rb")
+        return self.api._import(
+            json={
+                "content": file,
+                "path": path,
+                "language": language.upper(),
+                "overwrite": overwrite,
+                "format": format,
+            }
+        )
+
+    @ResponseHandler
+    def list(self, path):
+        return self.api.list(json={"path": path})
+
+    @ResponseHandler
+    def mkdirs(self, path):
+        return self.api.mkdirs(json={"path": path})
