@@ -1,4 +1,5 @@
 import base64
+from pathlib import Path
 from dbks.workspace.api import WorkspaceAPI
 from dbks.response_handler import ResponseHandler
 
@@ -44,3 +45,15 @@ class WorkspaceController:
     @ResponseHandler
     def mkdirs(self, path):
         return self.api.mkdirs(json={"path": path})
+
+    # create folder is not exists
+    def imports(self, local_path, path, language, overwrite=False, format="SOURCE"):
+        target_path = Path(path)
+        self.mkdirs(str(target_path.parent))
+        self._import(
+            local_path=local_path,
+            path=path,
+            language=language,
+            overwrite=overwrite,
+            format=format,
+        )
