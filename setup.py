@@ -1,9 +1,15 @@
-import setuptools
+import requests
+from setuptools import setup, find_packages
 
-# with open('README.rst', 'r') as fh:
-#     long_description = fh.read()
 
-setuptools.setup(
+def read_requirements():
+    with open("requirements.txt", "r") as f:
+        content = f.read()
+        requirements = content.split("\n")
+    return requirements
+
+
+setup(
     name="dbks",
     version="0.0.1",
     author="Vincent Lam",
@@ -12,8 +18,12 @@ setuptools.setup(
     long_description="",
     long_description_content_type="text/markdown",
     url="https://github.com/vincentlam/dbks",
-    packages=setuptools.find_packages(),
-    install_requires=["requests"],
+    packages=find_packages(),
+    install_requires=read_requirements(),
+    entry_points="""
+        [console_scripts]
+        dbks=dbks.cli:cli
+    """,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
