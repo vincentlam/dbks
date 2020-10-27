@@ -21,3 +21,19 @@ cluster-2:
     cluster_name: cluster-2
     ...
 ```
+
+## Access control list YAML example
+```yaml
+cluster-1:
+- user_name: jsmith@example.com
+  permission_level: CAN_RESTART
+- user_name: jcitizen@example.com
+  permission_level: CAN_MANAGE
+...
+
+cluster-2:
+- user_name: jdoe@example.com
+  permission_level: CAN_RESTART
+- user_name: jwhite@example.com
+  permission_level: CAN_MANAGE
+```
