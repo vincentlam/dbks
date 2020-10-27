@@ -1,7 +1,8 @@
 # DBKS - a Databricks CLI
 
 ## Environment variables
-DBC_HOST & DBC_TOKEN
+- DBC_HOST
+- DBC_TOKEN
 
 ## Cluster definition YAML example
 ```yaml
