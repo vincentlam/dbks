@@ -3,6 +3,7 @@ jupyter
 pre-commit
 pylint
 pytest
+pyyaml
 requests
 rst
 sphinx

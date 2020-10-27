@@ -1,5 +1,6 @@
 from dbks.cli import cli
 import click
+import yaml
 
 
 @click.group()
@@ -21,4 +22,5 @@ def create_or_edit(yml_path):
     Parse a YAML file and use its content to create or edit cluster(s).
     Please refer to documentation for YAML file example.
     """
-    click.echo(yml_path)
+    with open(yml_path) as file:
+        clusters_to_deploy = yaml.load(file, Loader=yaml.FullLoader)
