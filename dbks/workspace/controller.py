@@ -57,3 +57,6 @@ class WorkspaceController:
             overwrite=overwrite,
             format=format,
         )
+
+    def get_id_by_path(self, path):
+        return self.get_status(path).json()["object_id"]
