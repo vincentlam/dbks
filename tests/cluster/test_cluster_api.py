@@ -58,16 +58,17 @@ from unittest.mock import patch
     ],
 )
 def test_cluster_api(monkeypatch, inputs, expect):
+    monkeypatch.setenv("DBC_HOST", "fake_host.com")
     monkeypatch.setenv("DBC_TOKEN", "fake_token")
     with patch("dbks.client.Session.request") as mock:
-        client = Client("databricks.com")
+        client = Client()
         api = ClusterAPI(client)
         getattr(api, inputs["func"])(
             params=inputs.get("params", None), json=inputs.get("json", None)
         )
         mock.assert_called_once_with(
             expect["method"],
-            f"https://databricks.com/api/2.0/clusters/{expect['endpoint']}",
+            f"https://fake_host.com/api/2.0/clusters/{expect['endpoint']}",
             params=expect.get("params", None),
             json=expect.get("json", None),
             headers={"Authorization": "Bearer fake_token"},

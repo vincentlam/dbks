@@ -4,9 +4,9 @@ from requests import Session
 
 
 class Client:
-    def __init__(self, host: str, version: str = "2.0"):
-        self.host = host
+    def __init__(self, version: str = "2.0"):
         self.version = version
+        self.host = os.getenv(f"DBC_HOST", None)
         self.token = os.getenv(f"DBC_TOKEN", None)
         self.headers = {"Authorization": f"Bearer {self.token}"}
         self.session = Session()
