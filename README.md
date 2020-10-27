@@ -22,8 +22,9 @@ cluster-2:
     ...
 ```
 
-## Access control list YAML example
+## Cluster access control list YAML example
 ```yaml
+---
 cluster-1:
 - user_name: jsmith@example.com
   permission_level: CAN_RESTART
@@ -35,5 +36,19 @@ cluster-2:
 - user_name: jdoe@example.com
   permission_level: CAN_RESTART
 - user_name: jwhite@example.com
+  permission_level: CAN_MANAGE
+```
+
+## Directory/Notebook access control list YAML example
+```yaml
+---
+/path/to/object:
+- user_name: user1@example.com
+  permission_level: CAN_READ
+- user_name: user2@example.com
+  permission_level: CAN_RUN
+- user_name: user3@example.com
+  permission_level: CAN_EDIT
+- user_name: user4@example.com
   permission_level: CAN_MANAGE
 ```
