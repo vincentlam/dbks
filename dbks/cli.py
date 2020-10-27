@@ -8,7 +8,7 @@ class ComplexCLI(click.MultiCommand):
         for file_name in os.listdir(
             os.path.join(os.path.dirname(__file__), "cli_command")
         ):
-            if file_name.endswith(".py"):
+            if file_name.endswith(".py") and not file_name.startswith("__"):
                 files.append(file_name[:-3])
         files.sort()
         return files

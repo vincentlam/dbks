@@ -1,4 +1,3 @@
-from dbks.workspace.api import WorkspaceAPI
 import click
 import yaml
 from dbks.cluster.controller import ClusterController
