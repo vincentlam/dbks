@@ -1,5 +1,5 @@
-DBKS
-====
+DBKS - a Databricks CLI
+=======================
 
 
 Environment variables
@@ -9,7 +9,7 @@ DBC_TOKEN
 
 
 Cluster definition YAML example:
-    ---------------------
+--------------------------------
     cluster-1:
         cluster_name: cluster-1
         spark_version: 6.6.x-scala2.11
