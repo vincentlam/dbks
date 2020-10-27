@@ -1,5 +1,8 @@
+from dbks.client import Client
+
+
 class ClusterAPI:
-    def __init__(self, client):
+    def __init__(self, client=Client()):
         self.client = client
 
     def create(self, params=None, json=None):

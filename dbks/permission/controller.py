@@ -3,7 +3,7 @@ from dbks.response_handler import ResponseHandler
 
 
 class PermissionController:
-    def __init__(self, api):
+    def __init__(self, api=PermissionAPI()):
         if not isinstance(api, PermissionAPI):
             raise ValueError("Parameter must be an instance of PermissionAPI!")
         self.api = api

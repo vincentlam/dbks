@@ -1,5 +1,8 @@
+from dbks.client import Client
+
+
 class LibraryAPI:
-    def __init__(self, client):
+    def __init__(self, client=Client()):
         self.client = client
 
     def all_cluster_statuses(self, params=None, json=None):

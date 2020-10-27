@@ -5,7 +5,7 @@ from dbks.response_handler import ResponseHandler
 
 
 class WorkspaceController:
-    def __init__(self, api):
+    def __init__(self, api=WorkspaceAPI()):
         if not isinstance(api, WorkspaceAPI):
             raise ValueError("Parameter must be an instance of WorkspaceAPI!")
         self.api = api

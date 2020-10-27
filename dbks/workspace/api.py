@@ -1,5 +1,8 @@
+from dbks.client import Client
+
+
 class WorkspaceAPI:
-    def __init__(self, client):
+    def __init__(self, client=Client()):
         self.client = client
 
     def delete(self, params=None, json=None):

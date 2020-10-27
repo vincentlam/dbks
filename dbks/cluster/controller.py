@@ -4,7 +4,7 @@ from dbks.util import same_as_target
 
 
 class ClusterController:
-    def __init__(self, api):
+    def __init__(self, api=ClusterAPI()):
         if not isinstance(api, ClusterAPI):
             raise ValueError("Parameter must be an instance of ClusterAPI!")
         self.api = api
@@ -38,6 +38,10 @@ class ClusterController:
     def unpin(self, cluster_id):
         return self.api.unpin(json={"cluster_id": cluster_id})
 
+    @ResponseHandler
+    def delete(self, cluster_id):
+        return self.api.delete(json={"cluster_id": cluster_id})
+
     def get_id_by_name(self, cluster_name=""):
         cluster_ids = []
         if not cluster_name:
@@ -61,8 +65,8 @@ class ClusterController:
             if pin:
                 self.pin(cluster_id)
         elif len(cluster_ids) == 1:
+            print(f'cluster "{cluster_name}" already exists, compare spec...')
             cluster_id = cluster_ids[0]
-            (f'cluster "{cluster_name}" already exists, compare spec...')
             current_def = self.get(cluster_id).json()
             if not same_as_target(cluster_def, current_def):
                 (f'cluster "{cluster_name}" spec changed, editing...')
@@ -78,3 +82,18 @@ class ClusterController:
                 f'Found multiple clusters {cluster_ids} with name [{cluster_def["cluster_name"]}]!'
             )
         return resp
+
+    def delete_by_name(self, cluster_name=""):
+        cluster_ids = self.get_id_by_name(cluster_name)
+        if not cluster_ids:
+            print(f'cluster "{cluster_name}" does not exist, aborting...')
+            return None
+        elif len(cluster_ids) == 1:
+            print(f'cluster "{cluster_name}" found, deleting...')
+            cluster_id = cluster_ids[0]
+            self.unpin(cluster_id)
+            return self.delete(cluster_id)
+        else:
+            raise Exception(
+                f'Found multiple clusters {cluster_ids} with name "{cluster_name}"!'
+            )
